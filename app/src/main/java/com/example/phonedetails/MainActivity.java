@@ -6,8 +6,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
@@ -17,23 +15,19 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
 import android.telephony.CellIdentityWcdma;
 import android.telephony.CellInfo;
-import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
 import android.telephony.CellInfoWcdma;
 import android.telephony.CellLocation;
-import android.telephony.CellSignalStrengthCdma;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
-import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,13 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "main";
     Button btnStart;
     Button btnClean;
-    Button btnLocStart;
-    Button btnLocStop;
     Button btnMap;
     TextView tvInfo;
-    TextView tvLocation;
-    TextView tvLongitude;
-    TextView tvLatitude;
     String info = "";
     String strPhoneType = "";
     TelephonyManager manager;
@@ -66,9 +55,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvInfo = findViewById(R.id.tv_info);
-        tvLocation = findViewById(R.id.tv_location);
-        tvLatitude=findViewById(R.id.tv_latitude);
-        tvLongitude=findViewById(R.id.tv_longitude);
         btnStart = findViewById(R.id.btnStart);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -83,22 +69,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 clean();
-            }
-        });
-        btnLocStart = findViewById(R.id.btnLocStart);
-        btnLocStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tvLocation.setTextColor(Color.parseColor("#00FF00"));
-                GPS_start();
-            }
-        });
-        btnLocStop = findViewById(R.id.btnLocStop);
-        btnLocStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tvLocation.setTextColor(Color.parseColor("#FF0000"));
-                GPS_stop();
             }
         });
         btnMap = findViewById(R.id.btnMap);
@@ -245,16 +215,6 @@ public class MainActivity extends AppCompatActivity {
                     info += "   SS: " + signalStrength.getDbm() + "dBm}\r\n\r\n";
                     //call whatever you want from wcdmaS / wcdmaid
                 }
-//                else if (cellInfo instanceof CellInfoCdma){  //if cdma connection
-//                    CellSignalStrengthCdma signalStrength= ((CellInfoCdma) cellInfo).getCellSignalStrength();
-//                    CellIdentityCdma identityCdma = ((CellInfoCdma)cellInfo).getCellIdentity();
-//                    info += "Cell_"+i + "{\r\n";
-//                    info += "   CDMA\r\n";
-//                    info += "   CellID: "+ identityCdma + "\r\n";
-//                    info += "   Registered: " + cellInfo.isRegistered() + "\r\n";
-//                    info += "   SS: " + signalStrength.getDbm() + "dBm}\r\n\r\n";
-//                    //call whatever you want from cdmaS / cdmaid
-//                }
             }catch (Exception ex){
                 Log.d("neighboring error: ",ex.getMessage());
             }
@@ -267,42 +227,6 @@ public class MainActivity extends AppCompatActivity {
         tvInfo.setText("");
     }
 
-    @SuppressLint("MissingPermission")
-    public void GPS_start(){
-        Log.d("gps", "GPS_start");
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                Log.d(TAG, "onLocationChanged: "+location.getLongitude()+":"+location.getLatitude());
-                tvLatitude.setText((int) location.getLatitude());
-                tvLongitude.setText((int) location.getLongitude());
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-                Log.d("gps", "onStatusChanged: "+s+":"+i+":"+bundle);
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-                Log.d("gps", "onProviderEnabled: "+s);
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-                Log.d("gps", "onProviderDisabled: "+s);
-            }
-        };
-        locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000,0,locationListener);
-    }
-    public void GPS_stop(){
-        Log.d("gps", "GPS_stop");
-        if(locationManager != null){
-            locationManager.removeUpdates(locationListener);
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -311,50 +235,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
-////permission check
-//    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-//            ActivityCompat.requestPermissions((Activity)this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},1);
-//
-//            String list = "";  //I'm just adding everything to a string to display, but you can do whatever
-//
-//            //get cell info
-//            TelephonyManager tel = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-//            List<CellInfo> infos = tel.getAllCellInfo();
-//        for (int i = 0; i<infos.size(); ++i)
-//        {
-//        try {
-//        CellInfo info = infos.get(i);
-//        if (info instanceof CellInfoGsm) //if GSM connection
-//        {
-//        list += "Site_"+i + "\r\n";
-//        list += "Registered: " + info.isRegistered() + "\r\n";
-//        CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
-//        CellIdentityGsm identityGsm = ((CellInfoGsm) info).getCellIdentity();
-//        list += "cellID: "+ identityGsm.getCid() + "\r\n";
-//        list += "dBm: " + gsm.getDbm() + "\r\n\r\n";
-//        //call whatever you want from gsm / identitydGsm
-//        }
-//        else if (info instanceof CellInfoLte)  //if LTE connection
-//        {
-//        list += "Site_"+i + "\r\n";
-//        list += "Registered: " + info.isRegistered() + "\r\n";
-//        CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
-//        CellIdentityLte identityLte = ((CellInfoLte) info).getCellIdentity();
-//        //call whatever you want from lte / identityLte
-//        }
-//        else if (info instanceof CellInfoWcdma)  //if wcdma connection
-//        {
-//        CellSignalStrengthWcdma wcdmaS = ((CellInfoWcdma) info).getCellSignalStrength();
-//        CellIdentityWcdma wcdmaid = ((CellInfoWcdma)info).getCellIdentity();
-//        list += "Site_"+i + "\r\n";
-//        list += "Registered: " + info.isRegistered() + "\r\n";
-//        //call whatever you want from wcdmaS / wcdmaid
-//
-//        }
-//
-//        } catch (Exception ex) {
-//        Log.i("neighboring error 2: " ,ex.getMessage());
-//        }
-//        }
-//        Log.i("Info display", list);  //display everything.
