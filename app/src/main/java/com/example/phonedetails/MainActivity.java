@@ -15,7 +15,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.telecom.PhoneAccountHandle;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
 import android.telephony.CellIdentityWcdma;
@@ -23,12 +22,10 @@ import android.telephony.CellInfo;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
 import android.telephony.CellInfoWcdma;
-import android.telephony.CellLocation;
+import android.telephony.CellSignalStrength;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthWcdma;
-import android.telephony.NeighboringCellInfo;
-import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -142,87 +139,85 @@ public class MainActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.P)
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void MyTelephonyManager() {
-        Log.d(TAG, "MyTelephonyManager");
-        int phoneType = manager.getPhoneType();
-        switch (phoneType) { //phoneType indicates the type of radio used to transmit voice calls.
-            case (TelephonyManager.PHONE_TYPE_CDMA):
-                strPhoneType = "CDMA";
-                break;
-            case (TelephonyManager.PHONE_TYPE_GSM):
-                strPhoneType = "GSM";
-                break;
-            case (TelephonyManager.PHONE_TYPE_SIP):
-                strPhoneType = "SIP";
-                break;
-            case (TelephonyManager.PHONE_TYPE_NONE):
-                strPhoneType = "NONE";
-                break;
-        }
+//        Log.d(TAG, "MyTelephonyManager");
+//        int phoneType = manager.getPhoneType();
+//        switch (phoneType) { //phoneType indicates the type of radio used to transmit voice calls.
+//            case (TelephonyManager.PHONE_TYPE_CDMA):
+//                strPhoneType = "CDMA";
+//                break;
+//            case (TelephonyManager.PHONE_TYPE_GSM):
+//                strPhoneType = "GSM";
+//                break;
+//            case (TelephonyManager.PHONE_TYPE_SIP):
+//                strPhoneType = "SIP";
+//                break;
+//            case (TelephonyManager.PHONE_TYPE_NONE):
+//                strPhoneType = "NONE";
+//                break;
+//        }
 
-        boolean isRoaming = manager.isNetworkRoaming();
-        String PhoneType = strPhoneType;
-        @SuppressLint("MissingPermission") String imei = manager.getImei();//International Mobile Equipment Identity (IMEI)
-        @SuppressLint({"HardwareIds", "MissingPermission"}) String subscriberId = manager.getSubscriberId(); //IMSI
-        @SuppressLint({"HardwareIds", "MissingPermission"}) String simSerialNumber = manager.getSimSerialNumber();
-        String networkCountryIso = manager.getNetworkCountryIso();
-        String simCountryIso = manager.getSimCountryIso();
+//        boolean isRoaming = manager.isNetworkRoaming();
+//        String PhoneType = strPhoneType;
+//        @SuppressLint("MissingPermission") String imei = manager.getImei();//International Mobile Equipment Identity (IMEI)
+//        @SuppressLint({"HardwareIds", "MissingPermission"}) String subscriberId = manager.getSubscriberId(); //IMSI
+//        @SuppressLint({"HardwareIds", "MissingPermission"}) String simSerialNumber = manager.getSimSerialNumber();
+//        String networkCountryIso = manager.getNetworkCountryIso();
+//        String simCountryIso = manager.getSimCountryIso();
         String networkOperatorName = manager.getNetworkOperatorName();
         String networkOperator = manager.getNetworkOperator();
-
-
         info += "network Operator : " + networkOperator;
         info += "\nnetwork Operator Name: " + networkOperatorName;
-        info += "\nPhone Network Type: " + PhoneType;
-        info += "\nIMEI: " + imei;
-        info += "\nIMSI: " + subscriberId;
-        info += "\nSIM Serial Number: " + simSerialNumber;
-        info += "\nNetwork Country ISO: " + networkCountryIso;
-        info += "\nSIM Country ISO: " + simCountryIso;
-        info += "\nRoaming: " + isRoaming;
-
-
-
+//        info += "\nPhone Network Type: " + PhoneType;
+//        info += "\nIMEI: " + imei;
+//        info += "\nIMSI: " + subscriberId;
+//        info += "\nSIM Serial Number: " + simSerialNumber;
+//        info += "\nNetwork Country ISO: " + networkCountryIso;
+//        info += "\nSIM Country ISO: " + simCountryIso;
+//        info += "\nRoaming: " + isRoaming;
 
         @SuppressLint("MissingPermission") List<CellInfo> allCellInfo = manager.getAllCellInfo();
         info += "\n\nAllCellInfo:\n\n";
+        int count2G = 0;
+        int count3G = 0;
+        int count4G = 0;
+        int sumSS2G = 0;
+        int sumSS3G = 0;
+        int sumSS4G = 0;
+        int avgSS2G;
+        int avgSS3G;
+        int avgSS4G;
+
         for (int i = 0; i < allCellInfo.size(); ++i) {
-            try {
-                CellInfo cellInfo = allCellInfo.get(i);
-                Log.d(TAG, "MyTelephonyManager: cellInfo_"+i+"="+ cellInfo);
-                if (cellInfo instanceof CellInfoGsm){ //if GSM connection
-                    CellSignalStrengthGsm signalStrength = ((CellInfoGsm) cellInfo).getCellSignalStrength();
-                    CellIdentityGsm identityGsm = ((CellInfoGsm) cellInfo).getCellIdentity();
-                    info += "Cell_"+i + "{\r\n";
-                    info += "   GSM\r\n";
-                    info += "   CellID: "+ identityGsm.getCid() + "\r\n";
-                    info += "   Registered: " + cellInfo.isRegistered() + "\r\n";
-                    info += "   SS: " + signalStrength.getDbm() + "dBm}\r\n\r\n";
-                    //call whatever you want from gsm / identitydGsm
-                }
-                else if(cellInfo instanceof CellInfoLte){  //if LTE connection
-                    CellSignalStrengthLte signalStrength = ((CellInfoLte) cellInfo).getCellSignalStrength();
-                    CellIdentityLte identityLte = ((CellInfoLte) cellInfo).getCellIdentity();
-                    info += "Cell_"+i + "{\r\n";
-                    info += "   LTE\r\n";
-                    info += "   CellID: "+ identityLte.getCi() + "\r\n";
-                    info += "   Registered: " + cellInfo.isRegistered() + "\r\n";
-                    info += "   SS: " + signalStrength.getDbm() + "dBm}\r\n\r\n";
-                    //call whatever you want from lte / identityLte
-                }
-                else if (cellInfo instanceof CellInfoWcdma){  //if wcdma connection
-                    CellSignalStrengthWcdma signalStrength= ((CellInfoWcdma) cellInfo).getCellSignalStrength();
-                    CellIdentityWcdma identityWcdma = ((CellInfoWcdma)cellInfo).getCellIdentity();
-                    info += "Cell_"+i + "{\r\n";
-                    info += "   WCDMA\r\n";
-                    info += "   CellID: "+ identityWcdma.getCid() + "\r\n";
-                    info += "   Registered: " + cellInfo.isRegistered() + "\r\n";
-                    info += "   SS: " + signalStrength.getDbm() + "dBm}\r\n\r\n";
-                    //call whatever you want from wcdmaS / wcdmaid
-                }
-            }catch (Exception ex){
-                Log.d("neighboring error: ",ex.getMessage());
+            CellInfo cellInfo = allCellInfo.get(i);
+            if (cellInfo instanceof CellInfoGsm){ //if GSM connection(2G)
+                count2G++;
+                int SS2GdBm = ((CellInfoGsm) cellInfo).getCellSignalStrength().getDbm();
+                sumSS2G += SS2GdBm;
+            }
+            else if(cellInfo instanceof CellInfoLte){  //if LTE connection(4G)
+                count4G++;
+                int SS4GdBm = ((CellInfoLte) cellInfo).getCellSignalStrength().getDbm();
+                sumSS4G += SS4GdBm;
+            }
+            else if (cellInfo instanceof CellInfoWcdma){  //if wcdma connection(3G)
+                count3G++;
+                int SS3GdBm = ((CellInfoWcdma) cellInfo).getCellSignalStrength().getDbm();
+                sumSS4G += SS3GdBm;
             }
         }
+        if(count2G != 0){
+            avgSS2G = sumSS2G / count2G;
+            info += "\navgSS2G = " + avgSS2G;
+        }
+        if(count3G != 0){
+            avgSS3G = sumSS3G / count3G;
+            info += "\navgSS3G = " + avgSS3G;
+        }
+        if(count4G != 0){
+            avgSS4G = sumSS4G / count4G;
+            info += "\navgSS4G = " + avgSS4G;
+        }
+
         tvInfo.setText(info);
     }
 
