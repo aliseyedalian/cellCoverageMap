@@ -15,6 +15,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telecom.PhoneAccountHandle;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
 import android.telephony.CellIdentityWcdma;
@@ -27,6 +28,7 @@ import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.NeighboringCellInfo;
+import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -165,8 +167,10 @@ public class MainActivity extends AppCompatActivity {
         String networkCountryIso = manager.getNetworkCountryIso();
         String simCountryIso = manager.getSimCountryIso();
         String networkOperatorName = manager.getNetworkOperatorName();
-        @SuppressLint("MissingPermission") CellLocation cellLocation = manager.getCellLocation();
+        String networkOperator = manager.getNetworkOperator();
 
+
+        info += "network Operator : " + networkOperator;
         info += "\nnetwork Operator Name: " + networkOperatorName;
         info += "\nPhone Network Type: " + PhoneType;
         info += "\nIMEI: " + imei;
@@ -174,12 +178,12 @@ public class MainActivity extends AppCompatActivity {
         info += "\nSIM Serial Number: " + simSerialNumber;
         info += "\nNetwork Country ISO: " + networkCountryIso;
         info += "\nSIM Country ISO: " + simCountryIso;
-        info += "\nCell Location: " + cellLocation;
         info += "\nRoaming: " + isRoaming;
 
 
+
+
         @SuppressLint("MissingPermission") List<CellInfo> allCellInfo = manager.getAllCellInfo();
-        @SuppressLint("MissingPermission") List<NeighboringCellInfo> neighboringCellInfo = manager.getNeighboringCellInfo();
         info += "\n\nAllCellInfo:\n\n";
         for (int i = 0; i < allCellInfo.size(); ++i) {
             try {
