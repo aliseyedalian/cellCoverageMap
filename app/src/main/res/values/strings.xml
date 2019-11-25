@@ -5,6 +5,6 @@
     <string name="locStart">Location Start</string>
     <string name="locStop">Location Stop</string>
     <string name="ue_location">YOUR LOCATION:</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Cellular Coverage</string>
     <string name="show_google_map">Show google map</string>
 </resources>
