@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Cellular Networks</string>
-    <string name="start">Start</string>
+    <string name="app_name">Cellular Coverage</string>
+    <string name="netInfo">Net Info</string>
     <string name="clean">Clean</string>
     <string name="locStart">Location Start</string>
     <string name="locStop">Location Stop</string>
     <string name="ue_location">YOUR LOCATION:</string>
     <string name="title_activity_maps">Cellular Coverage</string>
-    <string name="show_google_map">Show google map</string>
+    <string name="show_google_map">Go to map</string>
 </resources>
