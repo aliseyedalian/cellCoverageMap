@@ -28,7 +28,7 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
+            android:label="@string/title_activity">
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -37,6 +37,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".GPSTrackerService" />
     </application>
 
 </manifest>

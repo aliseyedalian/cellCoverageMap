@@ -15,6 +15,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     Button btnMap;
+    Button btnExit;
 
 
 
@@ -29,6 +30,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, MapsActivity.class));
+            }
+        });
+        btnExit = findViewById(R.id.btnExit);
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
