@@ -13,13 +13,14 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "logD";
     Button btnMap;
     Button btnExit;
 
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: mainActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -41,13 +42,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "onResume: mainActivity");
         super.onResume();
         check_READ_PHONE_STATE_permission();
     }
     private void check_READ_PHONE_STATE_permission() {
-        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE)!=PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE)
+                !=PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "permissions:request READ_PHONE_STATE permission.");
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_PHONE_STATE},100);
+            ActivityCompat.requestPermissions(
+                    this,new String[]{Manifest.permission.READ_PHONE_STATE},100);
         }
     }
 
@@ -70,24 +74,24 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case (100): //READ_PHONE_STATE
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "onRequestPermissionsResult: READ_PHONE_STATE permission granted.");
+                    Log.d(TAG, "READ_PHONE_STATE permission granted.");
                     check_LOCATION_permissions();
 
                 } else {
-                    Log.d(TAG, "onRequestPermissionsResult: READ_PHONE_STATE permission denied.finish.");
                     finish();
                 }
                 break;
             case (200)://ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "onRequestPermissionsResult: ACCESS_FINE_LOCATION permissions granted.");
+                    Log.d(TAG, "ACCESS_FINE_LOCATION permissions granted.");
                 } else {
-                    Log.d(TAG, "onRequestPermissionsResult: Access Location permissions denied.finish.");
                     finish();
                 }
                 break;

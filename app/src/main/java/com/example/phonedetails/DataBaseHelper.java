@@ -1,6 +1,5 @@
 package com.example.phonedetails;
 
-
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -53,20 +52,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return resultPhone!=-1;
     }
 
-
-
     Cursor getPosLevTable(){
         return myDb.rawQuery("select * from posLev",null);
     }
 
-    private void rebuild() {
-        myDb.execSQL("drop table if exists poslev");
-        onCreate(myDb);
-    }
+
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        sqLiteDatabase.execSQL("drop table if exists poslev");
+        sqLiteDatabase.execSQL("drop table if exists posLev");
         onCreate(sqLiteDatabase);
     }
+//    private void rebuild() {
+//        myDb.execSQL("drop table if exists posLev");
+//        onCreate(myDb);
+//    }
 }
 
