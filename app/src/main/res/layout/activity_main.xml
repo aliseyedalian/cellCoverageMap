@@ -15,10 +15,9 @@
         android:orientation="vertical"
         tools:ignore="UselessParent">
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:src="@drawable/gps"
-            android:layout_margin="10dp"
             tools:ignore="ContentDescription" />
 
 
@@ -31,9 +30,9 @@
             android:layout_gravity="center"
             android:layout_marginTop="30sp"
             android:background="@drawable/rounded_button"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold"
-            android:textColor="#2CCC2C"
+            android:textColor="#001068"
             />
         <Button
             android:id="@+id/btnExit"
@@ -44,9 +43,9 @@
             android:layout_gravity="center"
             android:layout_marginTop="5sp"
             android:background="@drawable/rounded_button"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold"
-            android:textColor="#FA0000"
+            android:textColor="#001068"
             />
     </LinearLayout>
 </LinearLayout>
