@@ -1,6 +1,7 @@
 package com.example.phonedetails;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,7 +26,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -39,17 +41,19 @@ import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener,
+        com.google.android.gms.location.LocationListener,
         GoogleMap.OnMapClickListener,
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "logD";
     private static final int DEFAULT_ZOOM = 5;
+    private static LocationRequest locationRequest;
     private final LatLng mDefaultLocation = new LatLng(32.6027, 55.0197);
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
@@ -60,113 +64,74 @@ public class MapsActivity extends FragmentActivity implements
 
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
+    private com.google.android.gms.location.LocationListener locationListener;
 
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "MAP onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment fragment=(SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (fragment != null) {
             Log.d(TAG, "MAP Map Async");
             fragment.getMapAsync(this);
         }
+        // telephonyManager used for get cells information
         telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         txt = findViewById(R.id.txt);
+        //databaseHelper use for handle database functions
         databaseHelper = new DataBaseHelper(this);
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                double latitude=location.getLatitude();
+                double longitude=location.getLongitude();
+                txt.append("New Latitude: "+latitude + "New Longitude: "+longitude);
+            }
+        };
+
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        gpsCheck();
-    }
 
-    public void gpsCheck() {
-        Log.d(TAG, "MAP gpsCheck");
-        LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Your GPS seems to be disabled, Do you want to enable it?")
-                    .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(final DialogInterface dialog, final int id) {
-                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(final DialogInterface dialog, final int id) {
-                            dialog.cancel();
-                        }
-                    });
-            final AlertDialog alert = builder.create();
-            alert.show();
-        }
-    }
+//
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "MAP onMapReady");
+        mMap = googleMap;
+        locationRequest = new LocationRequest()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10000)
+                .setFastestInterval(5000);
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();
-        mMap = googleMap;
         try {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             Log.d(TAG, "MAP onMapReady: enable my location button");
         } catch (SecurityException e)  {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
             Log.d(TAG,"MAP onMapReady: can not enable my location button,"+ e.getMessage());
         }
-        // Get the current location of the device and set the position of the map.
-        getDeviceLocation();
-        drawCoverageCirclesFromDataBase();
+        drawCoverageCirclesFromDB();
     }
 
-    private void getDeviceLocation() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.getUiSettings().setMapToolbarEnabled(true);
-        mMap.getUiSettings().setAllGesturesEnabled(true);
 
-//        try {
-//            Task locationResult = mFusedLocationProviderClient.getLastLocation();
-//            locationResult.addOnCompleteListener(this, new OnCompleteListener() {
-//                @Override
-//                public void onComplete(@NonNull Task task) {
-//                    if (task.isSuccessful()) {
-//                        // Set the map's camera position to the current location of the device.
-//                        mLastKnownLocation = (Location) task.getResult();
-//                        if(mLastKnownLocation==null){
-//                            Log.d(TAG, "MAP onComplete: mLastKnownLocation is null");
-//                            return;
-//                        }
-//                        LatLng latLong = new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
-//                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLong, DEFAULT_ZOOM));
-//                    } else {
-//                        Log.d(TAG, "Current location is null. Using defaults.");
-//                        Log.e(TAG, "Exception: %s", task.getException());
-//                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-//                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-//                    }
-//                }
-//            });
-//        } catch(SecurityException e)  {
-//            Log.e("Exception: %s", e.getMessage());
-//        }
-    }
 
-    private void drawCoverageCirclesFromDataBase() {
-        Log.d(TAG, "MAP drawCoverageCirclesFromDataBase: ");
+    private void drawCoverageCirclesFromDB() {
+        Log.d(TAG, "MAP drawCoverageCirclesFromDB: ");
         Cursor resultCursor = databaseHelper.getPosLevTable();
         if(resultCursor.getCount()==0){
-            Log.d(TAG, "MAP drawCoverageCirclesFromDataBase: empty result, return");
+            Log.d(TAG, "MAP drawCoverageCirclesFromDB: empty result, return");
             return;
         }
         while (resultCursor.moveToNext()){
@@ -182,16 +147,26 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "MAP onConnected: ");
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(1000);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                ==PackageManager.PERMISSION_GRANTED) {
-            //noinspection deprecation
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,locationRequest,
-                    this);
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
+        final PendingResult locationUpdatesResult = LocationServices.FusedLocationApi
+                .requestLocationUpdates(googleApiClient, locationRequest, this);
+        PendingResult.StatusListener statusListener = new PendingResult.StatusListener() {
+            @Override
+            public void onComplete(Status status) {
+                Log.d(TAG, "onComplete: status="+status);
+            }
+        };
+        locationUpdatesResult.addStatusListener(statusListener);
+        new Thread(new Runnable() {
+            public void run(){
+                locationUpdatesResult.await();
+            }
+        }).start();
     }
 
 
@@ -272,39 +247,45 @@ public class MapsActivity extends FragmentActivity implements
 
     private void drawCoverageCircle(int level, LatLng latLng) {
         Log.d(TAG, "MAP drawCoverageCircle: (level:"+level+","+latLng+")");
-        int radius=5,alpha=120,red=255,green=255,blue=255;
+        int radius=10,alpha=120,red=255,green=255,blue=255;
         switch (level){
             case -1:
                 return;
             case 0:
-                red = 255;
+                red = 100;
                 green = 0;
                 blue = 0;
+                alpha=120;
                 break;
             case 1:
-                red = 204;
-                green = 51;
+                red = 120;
+                green = 0;
                 blue = 0;
+                alpha=100;
                 break;
             case 2:
-                red = 153;
-                green = 102;
+                red = 20;
+                green = 100;
                 blue = 0;
+                alpha=50;
                 break;
             case 3:
-                red = 102;
-                green = 153;
+                red = 0;
+                green = 150;
                 blue = 0;
+                alpha=70;
                 break;
             case 4:
-                red = 51;
-                green = 204;
+                red = 0;
+                green = 200;
                 blue = 0;
+                alpha=100;
                 break;
             case 5:
                 red = 0;
                 green = 255;
                 blue = 0;
+                alpha=140;
                 break;
         }
         CircleOptions circleOptions = new CircleOptions().
@@ -326,7 +307,33 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gpsCheck();
+    }
 
+    public void gpsCheck() {
+        Log.d(TAG, "MAP gpsCheck");
+        LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Your GPS seems to be disabled, Do you want to enable it?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            dialog.cancel();
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
 
 
 
@@ -340,6 +347,7 @@ public class MapsActivity extends FragmentActivity implements
     public void onConnectionSuspended(int i) {
         Log.d(TAG, "onConnectionSuspended: ");
     }
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult){
         Log.d(TAG, "onConnectionFailed: ");
