@@ -1,0 +1,4 @@
+#Sun Nov 24 18:35:48 IRST 2019
+base.0=/home/sedali/AndroidStudioProjects/PhoneDetails/app/build/intermediates/dex/release/mergeDexRelease/out
+path.0=classes.dex
+renamed.0=classes.dex

@@ -1,0 +1,7 @@
+#Sat Jan 25 20:37:27 IRST 2020
+base.0=/home/sedali/AndroidStudioProjects/PhoneDetails/app/build/intermediates/dex/debug/mergeExtDexDebug/out
+path.1=classes.dex
+renamed.1=classes2.dex
+path.0=classes.dex
+renamed.0=classes.dex
+base.1=/home/sedali/AndroidStudioProjects/PhoneDetails/app/build/intermediates/dex/debug/mergeProjectDexDebug/out
