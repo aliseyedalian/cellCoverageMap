@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Cell Coverage Map</string>
+    <string name="title_activity">Cell Coverage Map</string>
+    <string name="openMap">MAP</string>
+    <string name="exit">EXIT</string>
+    <string name="title_activity_maps2">Map</string>
+</resources>

@@ -1,123 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AndroidLayouts">
-    <shared>
-      <config />
-    </shared>
-  </component>
-  <component name="ChangeListManager">
-    <list default="true" id="a5558914-239a-46b7-9e87-7274275260d8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-    </list>
-    <option name="SHOW_DIALOG" value="false" />
-    <option name="HIGHLIGHT_CONFLICTS" value="true" />
-    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
-    <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="ExternalProjectsData">
-    <projectState path="$PROJECT_DIR$">
-      <ProjectState />
-    </projectState>
-  </component>
-  <component name="ExternalProjectsManager">
-    <system id="GRADLE">
-      <state>
-        <projects_view />
-      </state>
-    </system>
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="resourceFile" />
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>start</find>
-      <find>list</find>
-      <find>Site_</find>
-      <find>Plugin with id 'com.google.gms.google-services' not found.</find>
-      <find>class</find>
-      <find>moveCamera</find>
-      <find>myMap</find>
-      <find>manager.getSignalStrength();</find>
-      <find>getSignalStrength();</find>
-      <find>SignalStrength();</find>
-      <find>SignalStrength</find>
-      <find>setBackgroundColor</find>
-      <find>locationListener</find>
-      <find>onLocationChanged</find>
-      <find>googleApiClient</find>
-      <find>location</find>
-      <find>requestLocationUpdates</find>
-      <find>LocationManager</find>
-      <find>mGeoDataClient</find>
-      <find>mFusedLocationProviderClient</find>
-      <find>mLastKnownLocation</find>
-      <find>DEFAULT_ZOOM</find>
-      <find>mDefaultLocation</find>
-      <find>findFragmentById</find>
-      <find>com.google.android.gms.location.LocationListener</find>
-      <find>LocationListener</find>
-      <find>locationManager</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>cellInfoList</replace>
-      <replace>info</replace>
-      <replace>Cell_</replace>
-      <replace>mMap</replace>
-    </replaceStrings>
-  </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="25" />
     <option name="width" value="767" />
     <option name="height" value="875" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
-  <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="PhoneDetails" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PhoneDetails" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane" />
-    </panes>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
+  <component name="PropertiesComponent">
+    <property name="android.sdk.path" value="$USER_HOME$/android_linux/android-sdk" />
+    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
@@ -127,7 +17,7 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="app" />
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
@@ -180,58 +70,5 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-  </component>
-  <component name="SvnConfiguration">
-    <configuration />
-  </component>
-  <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="1091d7eb-0ca5-4f42-812d-0c182e7adc71" name="Default Changelist" comment="" />
-      <created>1573915232123</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1573915232123</updated>
-    </task>
-    <servers />
-  </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1533" height="875" extended-state="6" />
-    <layout>
-      <window_info id="Captures" order="0" side_tool="true" weight="0.24949563" />
-      <window_info content_ui="combo" id="Project" order="1" weight="0.20511097" />
-      <window_info id="Structure" order="2" side_tool="true" />
-      <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info id="Build Variants" order="4" side_tool="true" />
-      <window_info id="Image Layers" order="5" />
-      <window_info id="Designer" order="6" />
-      <window_info id="Resources Explorer" order="7" weight="0.32952252" />
-      <window_info id="Capture Tool" order="8" />
-      <window_info anchor="bottom" id="Run" order="0" sideWeight="0.49899125" weight="0.5868984" />
-      <window_info anchor="bottom" id="Logcat" order="1" sideWeight="0.49966374" weight="0.7680965" />
-      <window_info anchor="bottom" id="TODO" order="2" weight="0.32841823" />
-      <window_info anchor="bottom" id="Debug" order="3" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="4" sideWeight="0.49966374" visible="true" weight="0.32486632" />
-      <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.5016812" side_tool="true" weight="0.3632708" />
-      <window_info anchor="bottom" id="Version Control" order="6" />
-      <window_info anchor="bottom" id="Build" order="7" sideWeight="0.49831876" weight="0.36229947" />
-      <window_info anchor="bottom" id="Find" order="8" weight="0.3297587" />
-      <window_info anchor="bottom" id="Android Profiler" order="9" />
-      <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
-      <window_info anchor="right" id="Capture Analysis" order="1" />
-      <window_info anchor="right" id="Gradle" order="2" />
-      <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info anchor="right" id="Preview" order="4" weight="0.27168795" />
-      <window_info anchor="right" id="Palette&#9;" order="5" />
-      <window_info anchor="right" id="Assistant" order="6" weight="0.32952252" />
-    </layout>
   </component>
 </project>

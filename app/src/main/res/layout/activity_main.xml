@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/linearLayoutMainActivity"
+    android:padding="5dp"
+    android:background="#609BA3"
+    tools:context=".MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/gps"
+            tools:ignore="ContentDescription" />
+
+
+        <Button
+            android:id="@+id/btnMap"
+            android:text="@string/openMap"
+            android:layout_width="300dp"
+            android:padding="20dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30sp"
+            android:background="@drawable/rounded_button"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="#001068"
+            />
+        <Button
+            android:id="@+id/btnExit"
+            android:text="@string/exit"
+            android:layout_width="300dp"
+            android:padding="20dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5sp"
+            android:background="@drawable/rounded_button"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="#001068"
+            />
+    </LinearLayout>
+</LinearLayout>
