@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
     Button btnMap;
     Button btnExit;
 
-
-
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

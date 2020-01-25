@@ -1,7 +1,10 @@
 package com.example.phonedetails;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -18,9 +21,7 @@ import android.telephony.CellInfoWcdma;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.TextView;
-
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -49,9 +50,8 @@ public class MapsActivity extends FragmentActivity implements
     private GoogleApiClient googleApiClient;
     private TelephonyManager telephonyManager;
     private Location lastLocation;
-    protected LocationManager locationManager;
     TextView txt;
-    boolean isGpsEnabled=false;
+
 
 
 
@@ -69,18 +69,40 @@ public class MapsActivity extends FragmentActivity implements
             mapFragment.getMapAsync(this);
         telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         txt = findViewById(R.id.txt);
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if (!isGpsEnabled) {
-            txt.setText("Make sure Location is ON!\n");
-        }
+
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
+    protected void onResume() {
+        super.onResume();
+        statusCheck();
     }
+
+    public void statusCheck() {
+        LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, Do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
 
     @Override
@@ -172,13 +194,13 @@ public class MapsActivity extends FragmentActivity implements
         //registerToDb(latLng.latitude,latLng.longitude,maxSS3G);
         /* now only draw new signal coverage for 4G  **/
         Log.d(TAG, "startStopFunction: maxSS46="+maxSS4G);
-        registerToDb(newLatLng.latitude,newLatLng.longitude,maxSS4G);
         int level4G = dBmToLevel(maxSS4G);
+        registerToDb(newLatLng.latitude,newLatLng.longitude,level4G);
         drawSignalCoverageCircle(level4G,newLatLng);
         //addNewRecordToDB(lng,lat,signalLevel,avgSs,opr,gen);
     }
 
-    private void registerToDb(double latitude, double longitude, int rssi) {
+    private void registerToDb(double latitude, double longitude, int level) {
         Log.d(TAG, "registerToDb: ");
     }
 
@@ -241,6 +263,17 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
     @Override
     public void onConnectionSuspended(int i) {
         Log.d(TAG, "onConnectionSuspended: ");
@@ -262,12 +295,10 @@ public class MapsActivity extends FragmentActivity implements
     public void onMapClick(LatLng point) {
         Log.d(TAG, "onMapClick");
     }
-
     @Override
     public void onStop(){
         super.onStop();
         Log.d(TAG, "onStop: ");
         googleApiClient.disconnect();
     }
-
 }
